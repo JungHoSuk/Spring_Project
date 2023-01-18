@@ -4,16 +4,17 @@
 농업에 대해 모르더라도, '너와 농부싶어'와 함께 쉽게 시작할 수 있습니다.<br>
 
 # 기획 배경
-[Spring 프로젝트 발표자료 3-3.pdf](https://github.com/JungHoSuk/Spring_Project/files/10442808/Spring.3-3.pdf)
-[Spring 프로젝트 발표자료 4-4.pdf](https://github.com/JungHoSuk/Spring_Project/files/10442809/Spring.4-4.pdf)
+![Spring 프로젝트 발표자료 3-3_page-0001](https://user-images.githubusercontent.com/109846226/213102807-64057f3f-aca8-49e6-ba25-15e8a5efab25.jpg)
+![Spring 프로젝트 발표자료 4-4_page-0001](https://user-images.githubusercontent.com/109846226/213102826-3722ac1b-1e7d-4905-82c8-ce1f40b84d45.jpg)
+
 
 
 # 기대 효과
-[Spring 프로젝트 발표자료 5-5.pdf](https://github.com/JungHoSuk/Spring_Project/files/10442810/Spring.5-5.pdf)
+![Spring 프로젝트 발표자료 5-5_page-0001](https://user-images.githubusercontent.com/109846226/213103923-cf5e7548-03d4-44ff-91d1-05ec62b43cc1.jpg)
 
 
 # 사용 툴
-[Spring 프로젝트 발표자료 6-6.pdf](https://github.com/JungHoSuk/Spring_Project/files/10442811/Spring.6-6.pdf)
+![Spring 프로젝트 발표자료 6-6_page-0001](https://user-images.githubusercontent.com/109846226/213103937-3e1ba482-9228-48af-ad84-ab71ae1fa2b1.jpg)
 
 
 
@@ -29,11 +30,9 @@
 • 프로그램 작성 시 첨부파일로 첫번째 사진은 목록페이지, 2번째 부터는 상세페이지에 나오게 구현<br>
 <br>
 # 느낀점
-• 실제 사이트를 처음으로 퍼블리싱부터 백엔드 작업까지 해보면서 개발의 감을 익히게 된 것 같습니다.<br>
-• 기획 단계에서 충분히 커뮤니케이션이 되지 않아 했던 작업을 다시 해야했던 경험이 있어서 기획의 중요성을 느꼈습니다.<br>
-• 프로젝트를 하기 전 개발자란 혼자서 맡은 일을 하면 된다고 생각하였는데, 팀 프로젝트를 해보니 업무의 분담, 커뮤니케이션의 중요성을 뼈져리게 느꼈습니다.<br>
-• 출력메소드의 중요성을 알게 되었습니다.<br>
+• 이전에 JSP 프로젝트 경험을 바탕으로 기획과 커뮤니케이션에 많은 시간을 투자해 이전보다 더 많은 양이었지만 좋은 결과가 나왔습니다.<br>
+• Spring Framework와 Jpa, queryDsl의 편리함을 알게 되었습니다.<br>
+• 3 Tier 로 나눠서 테스트하는 과정을 반복하면서 JSP 프로젝트때 알고있던 것보다 더 자세히 MVC 모델을 이해하였습니다.<br>
 <br>
 # 아쉬운 점
-• 백엔드 맡은 부분 중 마이페이지 부분에서 사용자 타입에 따라 다르게 구현하는 부분에서 기획 내용이 잘못된 점도 있었고, 기획했던 것을 잘못 이해해 시간이 많이 소요되었습니다. 기획때 꼼곰하고 확실하게 이해했다면 시간이 단축되었을텐데 하는 아쉬움이 있습니다.<br>
-• JSP프로젝트를 진행하기 전 기술에 대해서 정확히 알고 있어야 했지만 국비 과정 상 빠르게 진행하는 와중에 이해한 것들이 있어서 수월하게 프로젝트를 진행하지 못한 점에 대해서 아쉬웠습니다.<br>
+• 국비 과정이다보니 짧은 시간안에 많은 것을 배워야 해서 프로젝트 완성은 하였지만, 전반적인 구조나 다양한 어노테이션들에 대한 이해가 조금 부족한 것 같아 개인 공부가 더 필요할 것 같습니다<br>
