@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/common/font.css"> <!-- 폰트 -->
+    <link rel="stylesheet" href="/css/admin/sideMenuList.css"> <!-- 사이드 메뉴 & 해더 -->
+    <link rel="stylesheet" href="/css/admin/contents.css"> <!-- 컨텐츠 공통 스타일 -->
+    <link rel="stylesheet" href="/css/admin/page.css"> <!-- 페이징 -->
+    <link rel="stylesheet" href="/css/admin/noticeForm.css"> <!-- 검색 폼 & 테이블 공통 스타일 -->
+    <link rel="stylesheet" href="/css/admin/notice.css"> <!-- 테이블 개별 스타일 -->
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <!-- 사이드 메뉴 -->
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="/js/admin/side_menu.js"></script>
+    <!-- 버튼 클릭 시 확인 알림창 -->
+    <script src="/js/admin/check.js"></script>
+    <title>관리자-아르바이트 글 관리</title>
+</head>
+
+<body>
+
+<div id="wrapper">
+    <!-- 세로 메뉴바 -->
+    <nav th:replace="/fix/side_menu.html :: sideMenu"></nav>
+    <!-- 헤더 ~ 밑에 메인 컨텐츠 -->
+    <div id="container">
+        <!-- 헤더 -->
+        <header>
+            <span id="admin-header-title" class="short">아르바이트 글 관리</span>
+            <span id="admin-mode">관리자 모드</span>
+            <span id="userCount">가입된 회원 수 총 <strong th:text="${memberCounts}"></strong>명</span>
+        </header>
+        <div id="wrapContents">
+            <!-- 컨텐츠 검색 부분 -->
+            <div class="p-contents chart-no">
+
+                <!-- 검색어 입력 폼 -->
+                <form th:action="@{/admin/job}" name="searchForm">
+                    <div class="search-form">
+                        <span class="s-form">
+                            <select class="keywords" th:value="${param.keyword}" name="keyword">
+                                <option value="t">아르바이트명</option>
+                                <option value="n">작성자</option>
+                            </select>
+                        </span>
+                    <span class="s-f-input">
+                        <span class="search-input">
+                            <input type="text" th:value="${param.searchText}" name="searchText" placeholder="검색어를 입력하세요.">
+                        </span>
+                    </span>
+                    <button type="submit">
+                        <img src="/image/admin/search.png">
+                    </button>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- 프로그램 리스트 출력 틀 -->
+            <div class="p-contents contents-bottom">
+                <span class="list-count">총
+                    <span th:text="${albaCounts}"></span>건
+                </span>
+
+                <table>
+                    <tr class="title">
+                        <th class="num">글번호</th>
+                        <th class="title" style="width: 35%">아르바이트명</th>
+                        <th class="id" style="width: 11%">작성자</th>
+                        <th style="width: 7%">신청 인원</th>
+                        <th class="hourCost">시급</th>
+                        <th class="work-date" style="width: 8%">작업날짜</th>
+                        <th class="date">작성날짜</th>
+                        <th class="status" style="width: 7%">상태</th>
+                        <th class="delete"></th>
+                    </tr>
+
+                    <!-- ↓ 데이터 출력 -->
+                    <th:block th:each="alba :${albas}">
+                        <tr class="title" th:object="${alba}">
+                            <td class="num" th:text="*{albaId}"></td>
+                            <td class="title" th:text="*{albaTitle}" th:onclick="|javascript:goPage('*{albaId}')|"></td>
+                            <td class="id" th:text="*{member.getMemberName}"></td>
+                            <td class="count-wrap">
+                                <span th:text="*{albaApplyCount}" class="count"/>/<span th:text="*{albaApplyTotalCount}" class="total"/>명
+                            </td>
+                            <td class="hourCost" th:text="*{albaPrice}"></td>
+                            <td class="work-date" th:text="*{#temporals.format(albaWorkDate, 'yyyy.MM.dd')}"></td>
+                            <td class="date">
+                                <th:block th:text="*{#temporals.format(createdDate, 'yyyy.MM.dd HH:mm')}"/>
+                                <input type="hidden" th:value="*{#temporals.format(albaApplyEndDate, 'yyyy-MM-dd')}" class="applyEndDate">
+                            </td>
+                            <td class="status" style="color: #4a4a4a;"></td>
+                            <td class="delete">
+                                <form method="post" class="deleteForm" th:action="@{/admin/job/delete}">
+                                    <input type="hidden" name="albaId" th:value="*{albaId}">
+                                    <input type="hidden" name="page" th:value="${criteria.page}">
+                                    <input type="hidden" name="searchText" th:value="${criteria.searchText}">
+                                    <input type="hidden" name="keyword" th:value="${criteria.keyword}">
+                                    <input type="button" value="삭제" class="deleteBtn">
+                                </form>
+                            </td>
+                        </tr>
+                    </th:block>
+                    <tr th:if="${data}">
+                        <td colspan="8" style="height: 180px;">검색 결과가 없습니다.</td>
+                    </tr>
+                </table>
+
+                <!-- 페이징 -->
+                <div id="page" th:if="${!data}">
+                    <div class="page_nation">
+                        <th:block th:with="start=${(albas.number/10)*10 + 1}, end=(${(resultCount == 0) ? 1 : ((start + 9) < resultCount ? (start + 9) : resultCount)})">
+                            <th:block th:if="${albas.pageable.pageNumber > 0}">
+                                <a class="arrow pprev" th:href="@{/admin/job(page=0, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                                <a class="arrow prev" th:href="@{/admin/job(page=${((albas.pageable.pageNumber/10)*10) - 1}, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                            </th:block >
+                            <th:block th:each="i: ${#numbers.sequence(start, end)}">
+                                <a th:href="@{/admin/job(page=${i - 1}, searchText=${param.searchText}, keyword=${param.keyword})}" th:classappend="${i == albas.pageable.pageNumber + 1} ? 'active' : '' " th:text="${i}">1</a>
+                            </th:block>
+
+                            <th:block th:if="${end < resultCount}">
+                                <a class="arrow next" th:href="@{/admin/job(page=${end},searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                                <a class="arrow nnext" th:href="@{/admin/job(page=${resultCount - 1}, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script th:inline="javascript">
+    let queryString = [[${criteria.queryString}]];
+    const urlParams = new URL(location.href).searchParams;
+    const keyword = urlParams.get('keyword');
+
+    var now = new Date(); // 현재
+    var year = now.getFullYear();   // 연도
+    var month = now.getMonth()+1;   // 월
+    var day = now.getDate();        // 일
+    var today = new Date(year, month, day);
+
+    $(document).ready(function() {
+        $("td.count-wrap").each(function(index, item){
+            let $count = $(this).children(".count").html();
+            let $total = $(this).children(".total").html();
+            let date = $(this).siblings('.date').children('input').val().split("-");
+            var endDate = new Date(date[0], date[1], date[2]);
+
+            var minus = today.getTime() - endDate.getTime() ;
+            var result = minus / (1000*60*60*24) ;
+
+            if (result > 0 || ($count == $total)){
+                $(this).siblings('.status').html("마감");
+                $(this).siblings('.status').css("color", "red");
+            } else if (result < 0) {
+                $(this).siblings('.status').html("모집 중");
+                $(this).siblings('.status').css("color", "green");
+            } else if (result == 0) {
+                $(this).siblings('.status').html("오늘 마감");
+            }
+        });
+        $(".applyCount").each(function(index, item){
+
+        });
+    });
+
+    $(".applyCount").html()
+    // 알바 디테일 페이지로 이동
+    function goPage (albaId) {
+        location.href='/alba/detail?albaId=' + albaId;
+    }
+
+    // 검색 옵션
+    if(keyword == null || keyword == "") {
+        $(".keywords").val('t').prop("selected", true);
+    } else {
+        $(".keywords").val(keyword).prop("selected", true);
+    }
+
+    $(document).ready(function(){
+        $(".askStatus").each(function(i, item) {
+            if($(this).html() == "CONFIRM"){
+                $(this).css("color", "green");
+            }
+        })
+    });
+
+    // 글 삭제
+    var msg = "이 공고를 삭제 하시겠습니까?";
+
+    $(".deleteBtn").on("click", function () {
+        var flag = confirm(msg);
+        if(flag){
+            $(this).parents("form.deleteForm").submit();
+        }
+    });
+</script>
+</body>
+<html>

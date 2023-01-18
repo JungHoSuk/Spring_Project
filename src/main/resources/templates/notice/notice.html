@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>너와농부싶어</title>
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <link rel="stylesheet" href="/css/common/font.css" />
+    <link rel="stylesheet" href="/css/header/header.css" />
+    <link rel="stylesheet" href="/css/footer/footer.css" />
+    <link rel="stylesheet" href="/css/notice/notice.css" />
+    <link rel="stylesheet" href="/css/myPage/paging.css" />
+</head>
+<body>
+<div th:replace="/header/header.html :: header" class="header"/>
+<div id="main">
+    <div class="notice-wrap">
+        <div class="n-wrap">
+            <section class="notice-title">공지사항</section>
+            <section class="notice-contents">
+                <div class="n-c-wrap" th:each="notice:${noticeLists}">
+                    <ul class="notice-content" th:object="${notice}"  th:onclick="|javascript:goPage('*{noticeId}')|">
+                        <li>
+                            <div>
+                                <div class="n-c-num" th:text="*{noticeId}"></div>
+                                <div class="n-c-title" th:text="*{noticeTitle}"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="n-c-count-group">
+                                <svg data-v-bd9f2bcc="" data-v-7d0ae9c8="" width="16" height="16" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" class="mr-4 c-application c-icon" style="fill: rgb(118, 125, 130);"><path data-v-bd9f2bcc="" fill-rule="evenodd" clip-rule="evenodd" d="M13.8766 8C11.3452 12.6334 4.65478 12.6334 2.12331 8C4.65478 3.36658 11.3452 3.36658 13.8766 8ZM14.8923 7.78461C12.0525 2.10504 3.94746 2.10504 1.10767 7.78461C1.03988 7.9202 1.03988 8.07979 1.10767 8.21538C3.94746 13.895 12.0525 13.895 14.8923 8.21538C14.9601 8.07979 14.9601 7.9202 14.8923 7.78461Z"></path><path data-v-bd9f2bcc="" fill-rule="evenodd" clip-rule="evenodd" d="M8 9.5C8.82843 9.5 9.5 8.82843 9.5 8C9.5 7.17157 8.82843 6.5 8 6.5C7.17157 6.5 6.5 7.17157 6.5 8C6.5 8.82843 7.17157 9.5 8 9.5ZM8 10.5C9.38071 10.5 10.5 9.38071 10.5 8C10.5 6.61929 9.38071 5.5 8 5.5C6.61929 5.5 5.5 6.61929 5.5 8C5.5 9.38071 6.61929 10.5 8 10.5Z"></path></svg>
+                                <div class="view-count" th:text="*{noticeViewCount}"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="n-c-bottom"></div>
+
+                <!--페이징-->
+                <div id="paging" style="margin-bottom: 100px;">
+                    <ul th:with="start=${(noticeLists.number/maxPage)*maxPage + 1}, end=(${(noticeLists.totalPages == 0) ? 1 : (start + (maxPage - 1) < noticeLists.totalPages ? start + (maxPage - 1) : noticeLists.totalPages)})">
+                        <li class="sidePageNum prev" th:if="${noticeLists.pageable.pageNumber > 0}">
+                            <a th:href="@{/notice(page=${((noticeLists.pageable.pageNumber/5)*5) - 1})}" class="page"><svg width="16" height="16" class="sidePageDisabled" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(270deg);" data-v-bd9f2bcc="" data-v-30c80689=""><path fill-rule="evenodd" clip-rule="evenodd" d="M7.64645 4.64645C7.84171 4.45118 8.15829 4.45118 8.35355 4.64645L12.8536 9.14645C13.0488 9.34171 13.0488 9.65829 12.8536 9.85355C12.6583 10.0488 12.3417 10.0488 12.1464 9.85355L8 5.70711L3.85355 9.85355C3.65829 10.0488 3.34171 10.0488 3.14645 9.85355C2.95118 9.65829 2.95118 9.34171 3.14645 9.14645L7.64645 4.64645Z" data-v-bd9f2bcc=""></path></svg></a>
+                        </li>
+                        <th:block  th:each="i: ${#numbers.sequence(start, end)}">
+                            <li>
+                                <a class="page" th:href="@{/notice(page=${i - 1})}" th:classappend="${i == noticeLists.pageable.pageNumber + 1} ? 'selectPage' : '' " th:text="${i}">1</a>
+                            </li>
+                        </th:block >
+                        <li class="sidePageNum next" th:if="${end < noticeLists.totalPages}">
+                            <a th:href="@{/notice(page=${end})}" class="page"><svg width="16" height="16" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(90deg);" data-v-bd9f2bcc="" data-v-30c80689=""><path fill-rule="evenodd" clip-rule="evenodd" d="M7.64645 4.64645C7.84171 4.45118 8.15829 4.45118 8.35355 4.64645L12.8536 9.14645C13.0488 9.34171 13.0488 9.65829 12.8536 9.85355C12.6583 10.0488 12.3417 10.0488 12.1464 9.85355L8 5.70711L3.85355 9.85355C3.65829 10.0488 3.34171 10.0488 3.14645 9.85355C2.95118 9.65829 2.95118 9.34171 3.14645 9.14645L7.64645 4.64645Z" data-v-bd9f2bcc=""></path></svg></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </section>
+        </div>
+    </div>
+</div>
+<!-- 푸터 -->
+<div th:replace="/footer/footer.html :: footer" class="footer"/>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="/js/header/header.js"></script>
+<script src="/js/community/link.js"></script>
+<script th:inline="javascript">
+    let queryString = [[${criteria.noticeQueryString}]];
+
+    // 답변 페이지로 이동
+    function goPage (noticeId) {
+        location.href='/notice/detail' + queryString + '&noticeId=' + noticeId;
+    }
+
+    // 헤더 검색창 없애기
+    $(".search_form").css("visibility", "hidden");
+
+    //서브헤더 소카 이름
+        $('div.menuList ul li:nth-child(1)').children().attr("class", "off");
+        $('div.menuList ul li:nth-child(2)').children().attr("class", "on");
+</script>
+</html>

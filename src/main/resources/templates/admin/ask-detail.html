@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/common/font.css"> <!-- 폰트 -->
+    <link rel="stylesheet" href="/css/admin/side_menu.css"> <!-- 사이드 메뉴 & 해더 -->
+    <!-- 글 작성 폼 -->
+    <link rel="stylesheet" href="/css/admin/askWrite.css">
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <!-- 사이드 메뉴 -->
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="/js/admin/side_menu.js"></script>
+    <!-- 썸머노트 -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <!-- 버튼 클릭 시 확인 알림창 -->
+    <script src="/js/admin/check.js"></script>
+    <title>관리자-문의하기 답변 작성</title>
+</head>
+
+<body style="background-color: #eee;">
+
+<div id="wrapper">
+    <!-- 세로 메뉴바 -->
+    <nav th:replace="/fix/side_menu.html :: sideMenu"></nav>
+    <!-- 헤더 ~ 밑에 메인 컨텐츠 -->
+    <div id="container">
+        <!-- 헤더 -->
+        <header>
+            <span id="admin-header-title">문의하기 답변 작성</span>
+            <span id="admin-mode">관리자 모드</span>
+            <span id="userCount">가입된 회원 수 총 <strong th:text="${memberCounts}"></strong>명</span>
+        </header>
+
+        <!-- 메인화면 컨텐츠 -->
+        <div id="write" th:object="${inquire}">
+            <table>
+                <colgroup>
+                    <col width="20%;">
+                    <col width="80%">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>문의번호</th>
+                        <td>
+                            <div class="title">
+                                <input th:field="*{inquireId}" class="ask_number" readonly>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>제목</th>
+                        <td>
+                            <div class="title">
+                                <input th:field="*{inquireQTitle}" class="ask_title" readonly>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>작성자</th>
+                        <td>
+                            <div class="writer">
+                                <input th:value="*{member.getMemberNickname}" class="ask_writer" readonly>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>작성날짜</th>
+                        <td>
+                            <div class="writer">
+                                <input th:value="*{#temporals.format(createdDate, 'yyyy.MM.dd HH:mm')}" class="ask_date" readonly>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="background: #ffffff;">
+                        <th>문의내용</th>
+                        <td>
+                            <div id="ask_editor" style="border: solid 1px #e6e6e6">
+                                <textarea th:field="*{inquireQContent}" class="summernote_ask" style="outline: none; min-height: 170px;" readonly>환불받고 싶은데 어떻게 해야 되나요?</textarea>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <form th:action="@{/admin/help/answer}" name="askForm" method="post" class="askForm" th:if="${answerCheck}">
+                <table class="ask_all_reply">
+                    <colgroup>
+                        <col width="20%;">
+                        <col width="80%">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>답변 내용</th>
+                        <td>
+                            <div class="ask_reply" th:object="${inquireAnswer}">
+                                <input type="hidden" th:field="${inquire.inquireId}">
+                                <input type="hidden" name="page" th:value="${criteria.page}">
+                                <input type="hidden" name="searchText" th:value="${criteria.searchText}">
+                                <input type="hidden" name="keyword" th:value="${criteria.keyword}">
+                                <div id="editor">
+                                    <textarea th:field="*{inquireAnswer}" class="summernote" placeholder="배너 내용을 입력하세요."></textarea>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="btns-group">
+                    <input type="button" onclick="aBackList()" class="g-btn list" value="문의 목록">
+                    <input type="button" class="g-btn submit a-submit" value="답변 등록">
+                </div>
+            </form>
+            <form th:action="@{/admin/help/answer/update}" name="askUpdateForm" method="post" class="askForm" th:if="${!answerCheck}">
+                <table class="ask_all_reply">
+                    <colgroup>
+                        <col width="20%;">
+                        <col width="80%">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>답변 내용</th>
+                        <td>
+                            <div class="ask_reply" th:object="${inquireAnswerUpdate}">
+                                <input type="hidden" th:field="*{inquireAnswerId}">
+                                <input type="hidden" name="page" th:value="${criteria.page}">
+                                <input type="hidden" name="searchText" th:value="${criteria.searchText}">
+                                <input type="hidden" name="keyword" th:value="${criteria.keyword}">
+                                <div id="editor2">
+                                    <textarea th:field="*{inquireAnswer}" class="summernote" placeholder="배너 내용을 입력하세요."></textarea>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="btns-group">
+                    <input type="button" onclick="auBackList()" class="g-btn list" value="문의 목록">
+                    <input type="button" class="g-btn submit au-submit" value="답변 등록">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="/js/admin/summerNoteBanner.js"></script>
+<script src="/js/admin/write.js"></script>
+<script th:inline="javascript">
+    let queryString = [[${criteria.queryString}]];
+    var msg = "글을 저장하지 않고 나가시겠습니까?";
+
+    //문의 목록으로 돌아가기기
+   function aBackList() {
+        if(askForm.inquireAnswer.value){
+            var flag = confirm(msg);
+            if (flag) {
+                location.href='/admin/help' + queryString;
+            }
+        } else {
+            location.href='/admin/help' + queryString;
+        }
+    }
+    function auBackList() {
+        var flag = confirm(msg);
+        if (flag) {
+            location.href='/admin/help' + queryString;
+        }
+    }
+</script>
+<html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>program detail</title>
+    <link rel="stylesheet" href="/css/program/detail.css"/>
+    <link rel="stylesheet" href="/css/common/font.css"/>
+    <link rel="stylesheet" href="/css/footer/footer.css"/>
+    <link rel="stylesheet" href="/css/header/header.css"/>
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+</head>
+<body>
+<div th:replace="/header/header.html :: header" class="header"/>
+<div id="main-grid">
+    <div class="d-application-row">
+    <div class="d-application-col" th:object="${list}">
+        <div class="grid-fluid">
+        <div class="grid-fluid-row">
+            <div class="banner-background"></div>
+            <div class="grid-container">
+            <div class="grid-container-row">
+            <div class="grid-container-col">
+                <section class="pg-detail-banner">
+                    <div class="banner-title-container">
+                        <span class="pg-detail-banner-chip" th:if="${list.programPrice} == 0" th:text="무료"></span>
+                        <span class="pg-detail-banner-chip" th:unless="${list.programPrice} == 0" th:text="유료"></span>
+                        <div class="pg-detail-banner-title" th:text="*{programTitle}"></div>
+                        <div class="pg-detail-banner-headline" th:text="*{programTitleSub}"></div>
+                    </div>
+                    <div class="banner-image-container">
+                        <img class="pg-detail-banner-image" style="width: 542px; height: 287px;" th:src="@{/file/display(fileName=${list.files[0].fileUploadPath} + '/' + ${list.files[0].fileUuid} + '_' + ${list.files[0].fileName})}">
+                    </div>
+                </section>
+            </div>
+            <div class="grid-container-col2"></div>
+            <div class="grid-container-col3">
+                <section class="pg-detail-sidebox-wrapper">
+                    <aside>
+                        <article class="pg-detail-sidebox">
+                            <div class="pg-typography">
+                                <div class="sidebox-category">
+                                    <div class="sidebox-category-name" th:text="*{programCrop}"></div>
+                                </div>
+                                <div class="sidebox-title" th:text="*{programTitle}"></div>
+                                <div class="sidebox-detail">
+                                    <div class="sidebox-difficulty">
+                                        <img class="sidebox-image" src="https://cdn.comento.kr/images/emojis/emoji-seedling.svg">
+                                        <div class="sidebox-difficulty-info">
+                                            <strong class="s" th:if="${#strings.equals(list.programType,'ONLY_MENTEE')}" th:text="멘티전용"></strong>
+                                            <strong class="s" th:unless="${#strings.equals(list.programType,'ONLY_MENTEE')}" th:text="전체사용자용"></strong>
+                                            <strong class="s" th:if="${#strings.equals(list.programLevel,'BASIC')}" th:text="초급"></strong>
+                                            <strong class="s" th:if="${#strings.equals(list.programLevel,'SKILL_UP')}" th:text="중급"></strong>
+                                            <strong class="s" th:if="${#strings.equals(list.programLevel,'MASTER')}" th:text="고급"></strong>프로그램입니다.</div>
+                                    </div>
+                                    <div class="sidebox-info">
+                                        <div class="sidebox-item-content">
+                                            <div class="sidebox-item-content-info">
+                                                <img class="content-img" src="/image/program/date.gif">
+                                                <div class="content-caption" th:with="weekday=${#temporals.dayOfWeekNameShort(list.programWorkDate)}" th:text="${#temporals.format(list.programWorkDate,'YYYY.MM.dd(' +weekday + ')')}"></div>
+                                            </div>
+                                            <div class="sidebox-item-content-info">
+                                                <img class="content-img" src="/image/program/time.gif">
+                                                <div class="content-caption" th:text=" ${#temporals.format(list.programWorkStartTime,'HH:mm~')} + ${#temporals.format(list.programWorkEndTime,'HH:mm')}"></div>
+                                            </div>
+                                            <div class="sidebox-item-content-info">
+                                                <img class="content-img" src="/image/program/count.gif">
+                                                <div class="content-caption" th:text="'정원 ' + *{programApplyTotalCount} + '명'"></div>
+                                            </div>
+                                            <div class="sidebox-item-content-info">
+                                                <img class="content-img" src="/image/program/money.gif">
+                                                <div class="content-caption" th:text="*{programPrice} + '원'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div th:switch="${check}">
+                                <a class="apply-a" th:case="register" th:href="@{/program/update(programId=${list.programId})}">
+                                    <button class="apply-button" >
+                                        <div class="button-icon"></div>
+                                        프로그램 수정하기
+                                        <div class="button-icon"></div>
+                                    </button>
+                                </a>
+                                <a class="apply-a"  th:case="user" th:href="@{/program/apply(programId=${list.programId})}">
+                                    <button class="apply-button">
+                                        <div class="button-icon"></div>
+                                        프로그램 신청하기
+                                        <div class="button-icon"></div>
+                                    </button>
+                                </a>
+                                <a class="apply-a" th:case="apply">
+                                    <button class="apply-button" style="pointer-events: none; background-color: #818181;">
+                                        <div class="button-icon"></div>
+                                        이미 신청한 프로그램 입니다.
+                                        <div class="button-icon"></div>
+                                    </button>
+                                </a>
+                                <a class="apply-a" th:case="isNotMentoMentee">
+                                    <button class="apply-button" style="pointer-events: none; background-color: #818181;">
+                                        <div class="button-icon"></div>
+                                        멘토 관계가 아닙니다
+                                        <div class="button-icon"></div>
+                                    </button>
+<!--                                    <button class="apply-button" th:href="@{/program/apply(programId=${list.programId})}">-->
+<!--                                        <div class="button-icon"></div>-->
+<!--                                        멘토 신청하기-->
+<!--                                        <div class="button-icon"></div>-->
+<!--                                    </button>-->
+                                </a>
+                                <a class="apply-a" th:case="noLogin">
+                                    <button class="apply-button" style="pointer-events: none; background-color: #818181;">
+                                        <div class="button-icon"></div>
+                                        로그인이 필요합니다
+                                        <div class="button-icon"></div>
+                                    </button>
+                                </a>
+
+
+                                </div>
+                            </div>
+                        </article>
+                        <div class="pg-deadline-timer">
+                            <div class="pg-deadline-timer-wrapper">
+                                <div class="timer-info">
+                                    <img class="content-img" src="/image/program/redmark.gif">
+                                    <div class="timer-caption">
+                                        <div class="timer-caption-line">
+                                            <input type="hidden" id="programEndDate" th:value="${list.programApplyEndDate}">
+                                            <span class="timer-caption-point" id="resultEndTime"></span>후 프로그램이 마감돼요.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </section>
+            </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        <div class="content">
+        <!-- 프로그램 공통 내용 -->
+        <div class="grid-fluid-second">
+        <div class="grid-fluid-second-row">
+        <div class="grid-fluid-second-col">
+        <div class="grid-container">
+        <div class="grid-container-row">
+        <div class="grid-container-col2">
+            <div class="pg-detail-up-box">
+                <div class="up-box-left">농장주의 <br>실무 활용법으로 <br>성과를 만드세요.</div>
+                <div class="up-box-right">
+                    <strong class="s">'귀농귀촌에 흥미, 관심이 있는 사람들'</strong>
+                    을 위한 프로그램입니다.<br>
+                    현직 농장주가 직접 진행하는 프로그램을 듣고, 실습해보고,<br>
+                    라이브 피드백을 받아
+                    <strong class="s">배운 기술을 '내 것'</strong>으로 만듭니다.</div>
+            </div>
+            <ul class="pg-detail-progress-box">
+                <li style="padding-right: 8px">
+                    <div class="progress-box1">
+                        <img class="progress-img" src="https://cdn.comento.kr/images/emojis/emoji-memo.svg">
+                        <div class="progress-box-title">프로그램 참여</div>
+                    </div>
+                    <div class="progress-box-body">
+                        프로그램 참여을 통해<br>
+                        작물에 대해 배우고<br>
+                        실습을 해볼 수 있어요.
+                    </div>
+                </li>
+                <img class="img-next" src="/image/program/next.gif">
+                <li>
+                    <div class="progress-box1">
+                        <img class="progress-img" src="https://cdn.comento.kr/images/emojis/emoji-counterclockwise-arrows-button.svg">
+                        <div class="progress-box-title">피드백</div>
+                    </div>
+                    <div class="progress-box-body">
+                        라이브 피드백을 통해<br>
+                        솔루션을 습득하고<br>
+                        현직 농장주의 방법을 익히세요.
+                    </div>
+                </li>
+                <img class="img-next" src="/image/program/next.gif">
+                <li style="padding-right: 12px">
+                    <div class="progress-box1">
+                        <img class="progress-img" src="https://cdn.comento.kr/images/emojis/emoji-man-technologist.svg">
+                        <div class="progress-box-title">바로 적용</div>
+                    </div>
+                    <div class="progress-box-body">
+                        오늘 익힌 스킬이<br>
+                        즉시 나의 역량이 되는<br>
+                        놀라운 경험으로 이어져요.
+                    </div>
+                </li>
+            </ul>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <!-- 프로그램 대상 -->
+        <div class="grid-fluid-third">
+            <div class="c-new-row">
+                <div class="c-new-col">
+                    <section class="pg-detail-target-user">
+                        <h4 class="pg-detail-target-user-title">이런 분들이라면 꼭 들으세요!</h4>
+                        <div class="pg-detail-target-user-background">
+                        <div class="target-user-background"><div class="target-user-body" th:text="*{programTarget1}"></div></div>
+                        <div class="target-user-background"><div class="target-user-body" th:text="*{programTarget2}"></div></div>
+                        <div class="target-user-background"><div class="target-user-body" th:text="*{programTarget3}"></div></div>
+                        <div class="target-user-background"><div class="target-user-body" th:text="*{programTarget4}"></div></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- 멘토 소개 -->
+        <div class="grid-fluid-second">
+            <div class="grid-fluid-second-row">
+                <div class="grid-fluid-second-col">
+                    <div class="grid-container">
+                        <div class="grid-container-row">
+                            <div class="grid-container-col2">
+                    <section class="pg-detail-target-user">
+                        <img class="mentor-img" src="https://cdn.comento.kr/images/class/pt/detail/icon/doublequote-icon.png">
+                        <pre><p class="pg-mentor-body" style="font-family: Pretendard" th:text="*{programFarmerInfo}"></p></pre>
+                    </section>
+                </div>
+                </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- 프로그램 결과 -->
+        <div class="grid-fluid-third">
+            <div class="c-new-row">
+                <div class="c-new-col">
+                    <section class="pg-detail-target-user">
+                        <h4 class="pg-detail-target-user-title">프로그램을 수강한 당신은<br>이렇게 됩니다.</h4>
+                        <div class="pg-detail-result-background">
+                            <div class="target-result-background mb-15">
+                                <div class="target-result-body" th:text="*{programResult1}"></div>
+                                <img class="result-img" src="/image/program/farmer.png">
+                            </div>
+                            <div class="target-result-background mb-15">
+                                <div class="target-result-body" th:text="*{programResult2}"></div>
+                                <img class="result-img" src="/image/program/woman_farmer.png">
+                            </div>
+                            <div class="target-result-background">
+                                <div class="target-result-body" th:text="*{programResult3}"></div>
+                                <img class="result-img" src="/image/program/crate.png">
+                            </div>
+                            <div class="target-result-background">
+                                <div class="target-result-body" th:text="*{programResult4}"></div>
+                                <img class="result-img" src="/image/program/pick-up-truck.png">
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- 프로그램 소개 -->
+        <div class="grid-fluid-third">
+            <div class="c-new-row">
+                <div class="c-new-col">
+                    <section class="pg-detail-target-user">
+                        <h4 class="pg-detail-target-user-title">프로그램의 핵심 내용입니다.</h4>
+                        <div class="pg-detail-target-user-background">
+                            <div class="pg-info-background mb-15">
+                                <div class="pg-info-title-number">01.</div>
+                                <div class="pg-info-title" th:text="*{programInfoTitle1}"></div>
+                                <div class="pg-info-content" th:text="*{programInfoContent1}"></div>
+                            </div>
+                            <div class="pg-info-background mb-15">
+                                <div class="pg-info-title-number">02.</div>
+                                <div class="pg-info-title" th:text="*{programInfoTitle2}"></div>
+                                <div class="pg-info-content" th:text="*{programInfoContent2}"></div>
+                            </div>
+                            <div class="pg-info-background mb-15">
+                                <div class="pg-info-title-number">03.</div>
+                                <div class="pg-info-title" th:text="*{programInfoTitle3}"></div>
+                                <div class="pg-info-content" th:text="*{programInfoContent3}"></div>
+                            </div>
+                            <div class="pg-info-background">
+                                <div class="pg-info-title-number">04.</div>
+                                <div class="pg-info-title" th:text="*{programInfoTitle4}"></div>
+                                <div class="pg-info-content" th:text="*{programInfoContent4}"></div>
+                            </div>
+                        </div>
+                        <div class="pg-info-background" th:each="test: ${list.files}">
+                            <img class="register-img" style="width: 729px; height: 729px; object-fit: contain;" th:src="@{/file/display(fileName=${test.fileUploadPath} + '/' + ${test.fileUuid} + '_' + ${test.fileName})}">
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- 프로그램 상세 내용 -->
+        <div class="grid-fluid-second">
+            <div class="grid-fluid-second-row">
+                <div class="grid-fluid-second-col">
+                    <div class="grid-container">
+                        <div class="grid-container-row">
+                            <div class="grid-container-col2">
+                                <section class="pg-detail-target-user">
+                                    <h4 class="pg-detail-target-user-title">상세한 프로그램 정보를 알려드릴게요.</h4>
+                                    <div class="pg-detail-target-user-background">
+                                        <div class="pg-detail-info-background mb-15">
+                                            <div class="pg-detail-info-title">진행 일정</div>
+                                            <div class="pg-detail-info-content" th:with="weekday=${#temporals.dayOfWeekNameShort(list.programWorkDate)}" th:text="${#temporals.format(list.programWorkDate,'YYYY-MM-dd(' +weekday + ')')}"></div></div>
+                                        <div class="pg-detail-info-background mb-15">
+                                            <div class="pg-detail-info-title">진행 시간</div>
+                                            <div class="pg-detail-info-content" th:text=" ${#temporals.format(list.programWorkStartTime,'HH:mm~')} + ${#temporals.format(list.programWorkEndTime,'HH:mm')}"></div></div>
+                                        <div class="pg-detail-info-background mb-15">
+                                            <div class="pg-detail-info-title">신청 기간</div>
+                                            <div class="pg-detail-info-content" th:text=" ${#temporals.format(list.programApplyStartDate,'YYYY-MM-dd ~ ')} + ${#temporals.format(list.programApplyEndDate,'YYYY-MM-dd')}"></div></div>
+                                        <div class="pg-detail-info-background mb-15">
+                                            <div class="pg-detail-info-title">신청 인원</div>
+                                            <div class="pg-detail-info-content" th:text="*{programApplyTotalCount} + '명'"></div></div>
+                                        <div class="pg-detail-info-background mb-15">
+                                            <div class="pg-detail-info-title">참여 비용</div>
+                                            <div class="pg-detail-info-content">무료</div></div>
+                                        <div class="pg-detail-info-background mb-15">
+                                            <div class="pg-detail-info-title">장소</div>
+                                            <div class="pg-detail-info-content" th:text="*{programLocation}"></div></div>
+                                        <div class="pg-detail-info-background">
+                                            <div class="pg-detail-info-title">문의</div>
+                                            <div class="pg-detail-info-content" th:text="*{programInquire}"></div></div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- 프로그램 환불규정 -->
+        <div class="grid-fluid-third">
+            <div class="c-new-row">
+                <div class="c-new-col">
+                    <section class="pg-detail-target-user">
+                        <h4 class="pg-detail-refund-title">환불규정</h4>
+                        <ul class="pg-detail-refund-script mb-24">
+                            <p class="refund-script-1">너와농부싶어는 아래와 같은 경우에 환불을 해드리고 있습니다.</p>
+                            <p class="refund-script-2">1. 신청자가 본인 의사로 참여를 포기한 경우</p>
+                            <p class="refund-script-2">2. 농장주가 진행을 할 수 없게 된 경우</p>
+                        </ul>
+                        <ul class="pg-detail-refund-script">
+                            <p class="refund-script-1">[프로그램 세부환불 규정]</p>
+                            <p class="refund-script-2">- 프로그램 시작 2일 전 : 결제금액 전액 환불</p>
+                            <p class="refund-script-2">- 프로그램 시작 1일 전 : 결제금액의 1/2 환불</p>
+                            <p class="refund-script-2">- 프로그램 당일 : 환불 불가</p>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- 프로그램 유의사항 -->
+        <div class="grid-fluid-notice">
+            <div class="grid-fluid-second-row">
+                <div class="grid-fluid-second-col">
+                    <div class="grid-container">
+                        <div class="grid-container-row">
+                            <div class="grid-container-col2">
+                                <section class="pg-detail-target-user">
+                                    <h4 class="pg-detail-target-user-title  mb-24">유의사항</h4>
+                                    <ul class="pg-detail-refund-script">
+                                        <p class="refund-script-3">- 원활한 참여를 위해 프로그램 진행에 필요한 환경을 확인해 미리 준비하시기 바랍니다.</p>
+                                        <p class="refund-script-3">- 프로그램은 현직 농장주와 사용자가 함께 만들어가는 활동입니다.<br>&nbsp;&ensp;프로그램의 분위기를 흐리거나 불성실하게 참여하는 경우 참여 제재 조치를 받을 수 있습니다.</p>
+                                        <p class="refund-script-3">- 프로그램 최소 인원 모집이 미달된 경우, 프로그램 일정이 조정될 수 있습니다.</p>
+                                    </ul>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<div th:replace="/footer/footer.html :: footer" class="footer"/>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="/js/header/header.js"></script>
+<script src="/js/program/detail.js"></script>
+<script>
+    // 헤더 검색창 없애기
+    $(".search_form").css("visibility", "hidden");
+    var endDate = $("#programEndDate").val();
+    console.log(endDate);
+
+    var nowDate = new Date();
+    console.log(nowDate);
+
+    var test = Date.parse(endDate);
+    var test2 = Date.parse(nowDate);
+    console.log(test);
+    console.log(test2);
+    var test3 = test - test2;
+    console.log(test3);
+
+    const seconds = 1000;
+    // 분
+    const minute = seconds * 60;
+    // 시
+    const hour = minute * 60;
+    // 일
+    const day = hour * 24;
+    // 년
+    const year = day * 365;
+
+    var test4 = new Date(test3);
+
+    console.log(test4);
+
+    function date_to_str() {
+        var endDate = $("#programEndDate").val();
+        var nowDate = new Date();
+        var parseEndDate = Date.parse(endDate);
+        var parseNowDate = Date.parse(nowDate);
+        var parseResultDate = parseEndDate - parseNowDate;
+        var parseTimestamp = new Date(parseResultDate);
+
+        // var year = format.getFullYear();
+
+        // var month = format.getMonth() + 1;
+
+        // if(month<10) month = '0' + month;
+
+        var date = parseTimestamp.getDate();
+
+        if(date<10) date = '0' + date;
+
+        var hour = parseTimestamp.getHours();
+
+        if(hour<10) hour = '0' + hour;
+
+        var min = parseTimestamp.getMinutes();
+
+        if(min<10) min = '0' + min;
+
+        var sec = parseTimestamp.getSeconds();
+
+        if(sec<10) sec = '0' + sec;
+
+
+        $("#resultEndTime").text((date-1) + "일" + (hour-9) + "시간" + min + "분" + sec + "초");
+        // return (date-1) + "일" + (hour-9) + "시간" + min + "분" + sec + "초";
+    }
+
+
+    console.log(date_to_str(test4));
+
+
+    setInterval(date_to_str, 1000);
+
+</script>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/common/font.css"> <!-- 폰트 -->
+    <link rel="stylesheet" href="/css/admin/sideMenuList.css"> <!-- 사이드 메뉴 & 해더 -->
+    <link rel="stylesheet" href="/css/admin/contents.css"> <!-- 컨텐츠 공통 스타일 -->
+    <link rel="stylesheet" href="/css/admin/program_participant.css"> <!-- 테이블 개별 스타일 -->
+    <link rel="stylesheet" href="/css/admin/form.css"> <!-- 검색 폼 & 테이블 공통 스타일 -->
+    <link rel="stylesheet" href="/css/admin/page.css"> <!-- 페이징 -->
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <!-- 사이드 메뉴 -->
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="/js/admin/side_menu.js"></script>
+    <!-- 버튼 클릭 시 확인 알림창 -->
+    <script src="/js/admin/check.js"></script>
+    <title>관리자-체험 프로그램 지원자 관리</title>
+</head>
+
+<body>
+
+<div id="wrapper">
+    <!-- 세로 메뉴바 -->
+    <nav th:replace="/fix/side_menu.html :: sideMenu"></nav>
+
+    <!-- 헤더 ~ 밑에 메인 컨텐츠 -->
+    <div id="container">
+        <!-- 헤더 -->
+        <header>
+            <span id="admin-header-title">농촌 프로그램 지원자 관리</span>
+            <span id="admin-mode">관리자 모드</span>
+            <span id="userCount">가입된 회원 수 총 <strong th:text="${memberCounts}"></strong>명</span>
+        </header>
+        <div id="wrapContents">
+            <!-- 컨텐츠 검색 부분 -->
+            <div class="p-contents">
+
+                <!-- 검색어 입력 폼 -->
+                <form th:action="@{/admin/program/participant}" name="searchForm">
+                    <div class="search-form">
+                        <span class="s-form">
+                            <select class="keywords" th:value="${param.keyword}" name="keyword">
+                                <option value="p">프로그램명</option>
+                                <option value="n">지원자</option>
+                                <option value="l">위치</option>
+                            </select>
+                        </span>
+                        <span class="s-f-input">
+                            <span class="search-input">
+                                <input type="text" th:value="${param.searchText}" name="searchText" placeholder="검색어를 입력하세요.">
+                            </span>
+                        </span>
+                        <button type="submit">
+                            <img src="/image/admin/search.png">
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- 프로그램 리스트 출력 틀 -->
+            <div class="p-contents contents-bottom">
+                <span class="list-count">총
+                    <span th:text="${memberProgramCounts}"></span>건
+                </span>
+
+                <table>
+                    <tr class="title">
+                        <th class="num" style="width: 6%;">번호</th>
+                        <th class="name" style="width: 6%;">지원자</th>
+                        <th class="title">프로그램명</th>
+                        <th class="nickName" style="width: 10%;">전화번호</th>
+                        <th class="work-date" style="width: 8%;">생년월일</th>
+                        <th class="address" style="width: 17%;">위치</th>
+                        <th class="work-time" style="width: 8%;">결제금액</th>
+                        <th class="date" style="width: 9%;">지원날짜</th>
+                        <th class="crop" style="width: 7%;">진행상황</th>
+                    </tr>
+                    <!-- ↓ 데이터 출력 -->
+                    <th:block th:each="memberProgram :${memberPrograms}">
+                        <tr th:object="${memberProgram}">
+                            <td th:text="*{programApplyId}"></td>
+                            <td class="name" th:text="*{member.getMemberName}"></td>
+                            <td class="title" th:text="*{program.getProgramTitle}" th:onclick="|javascript:goPage('*{program.getProgramId}')|"></td>
+                            <td class="nickName" th:text="*{programApplyPhoneNum}"></td>
+                            <td th:text="*{#temporals.format(programApplyBirth, 'yyyy.MM.dd')}"></td>
+                            <td th:text="*{programApplyLocation}"></td>
+                            <td class="payment">
+                                <input type="hidden" class="pay" th:value="*{programPayment * programApplyCount}">
+                            </td>
+                            <td th:text="*{#temporals.format(createdDate, 'yyyy.MM.dd HH:mm')}"></td>
+                            <td class="status">
+                                <input type="hidden" class="programStatus" th:value="*{programStatus}">
+                                <div class="statusText"></div>
+                            </td>
+                        </tr>
+                    </th:block>
+                    <tr th:if="${data}">
+                        <td colspan="9" style="height: 180px;">검색 결과가 없습니다.</td>
+                    </tr>
+                </table>
+
+                <!-- 페이징 -->
+                <div id="page" th:if="${!data}">
+                    <div class="page_nation">
+                        <th:block th:with="start=${(memberPrograms.number/10)*10 + 1}, end=(${(resultCount == 0) ? 1 : ((start + 9) < resultCount ? (start + 9) : resultCount)})">
+                            <th:block th:if="${memberPrograms.pageable.pageNumber > 0}">
+                                <a class="arrow pprev" th:href="@{/admin/program/participant(page=0, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                                <a class="arrow prev" th:href="@{/admin/program/participant(page=${((memberPrograms.pageable.pageNumber/10)*10) - 1}, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                            </th:block >
+                            <th:block th:each="i: ${#numbers.sequence(start, end)}">
+                                <a th:href="@{/admin/program/participant(page=${i - 1}, searchText=${param.searchText}, keyword=${param.keyword})}" th:classappend="${i == memberPrograms.pageable.pageNumber + 1} ? 'active' : '' " th:text="${i}">1</a>
+                            </th:block>
+
+                            <th:block th:if="${end < resultCount}">
+                                <a class="arrow next" th:href="@{/admin/program/participant(page=${end},searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                                <a class="arrow nnext" th:href="@{/admin/program/participant(page=${resultCount - 1}, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script th:inline="javascript">
+    let queryString = [[${criteria.queryString}]];
+    const urlParams = new URL(location.href).searchParams;
+    const keyword = urlParams.get('keyword');
+
+    $(document).ready(function() {
+        $(".pay").each(function(index, item){
+            let $status = $(this).parent().siblings("td.status");
+            let $statusText = $status.children(".statusText");
+            let $programStatus = $status.children("input").val();
+
+            console.log($(this).val());
+            $(this).parent().html(($(this).val() > 0 ? $(this).val() : "무료"));
+            if ($programStatus == "PAY_SUCCEED"){
+                $statusText.html("신청 완료");
+            } else {
+                $statusText.html("신청 취소");
+                $statusText.css("color", "red");
+            }
+
+            // if ($(this).next().html() == "결제 취소"){
+            //     $(this).next().css("color", "red");
+            // }
+        });
+    });
+
+
+    // 알바 디테일 페이지로 이동
+    function goPage (programId) {
+        location.href='/program/detail?programId=' + programId;
+    }
+
+    // 검색 옵션
+    if(keyword == null || keyword == "") {
+        $(".keywords").val('p').prop("selected", true);
+    } else {
+        $(".keywords").val(keyword).prop("selected", true);
+    }
+</script>
+</body>
+<html>

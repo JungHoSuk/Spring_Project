@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>너와농부싶어</title>
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <link rel="stylesheet" href="/css/common/font.css" />
+    <link rel="stylesheet" href="/css/header/header.css" />
+    <link rel="stylesheet" href="/css/footer/footer.css" />
+    <link rel="stylesheet" href="/css/myPage/sideMenu.css" />
+    <link rel="stylesheet" href="/css/myPage/community.css" />
+    <link rel="stylesheet" href="/css/myPage/paging.css" />
+</head>
+<body>
+<div th:replace="/header/header.html :: header" class="header"/>
+<div id="main">
+    <div class="wrap-w" style="padding-bottom: 0">
+        <div class="container">
+            <div class="contentsWrap">
+                <!--메뉴 카텍고리 시작-->
+                <div th:replace="/myPage/sidemenu.html :: myPageMenu"></div>
+                <!--컨텐츠 시작-->
+                <div class="contents">
+                    <div class="c-header">
+                        <div class="c-title">
+                            <div>문의 내역</div>
+                        </div>
+                        <div class="content">
+                            <!-- 문의 내역이 없을 경우 -->
+                            <div id="n-c"></div>
+                            <!--<div class="n-c-wrap">-->
+<!--                                문의 내역이 없습니다.-->
+                            <!--</div>-->
+                            <!------------------------>
+
+                            <!-- 문의 내역이 있을 경우 -->
+                            <div id="c-w">
+                            <!--<div id="c-w-wrap" class="f-column" th:each="inquire : ${inquires}">-->
+
+                                <!---->
+                                    <!--<div class="commu c-link" th:onclick="|javascript:viewAnswer(${inquire.inquireId})|">
+                                        <div class="c-top-wrap">
+                                            <div class="c-date" th:text="${#temporals.format(inquire.createdDate, 'yyyy.MM.dd HH:mm')}">
+                                                2022.11.13 15:00
+                                            </div>
+                                        </div>
+                                        <div class="c-group">
+                                            <div class="c-g-title" th:text="${inquire.inquireQTitle}">환불받고 싶은데 어떻게 해야 되나요?</div>
+                                        </div>
+                                        <div class="commu-group">
+                                            <div class="c-status">
+    &lt;!&ndash;                                            <span class="i-ing">대기 중</span>&ndash;&gt;
+                                                <span class="i-finish" th:text="${inquire.inquireStatus}">답변완료</span>
+                                            </div>
+                                        </div>
+                                    </div>-->
+                            <!--</div>-->
+                        </div>
+                            <!------------------------>
+                        </div>
+
+                        <div id="paging" style="margin-bottom: 100px;">
+                            <!--                    <ul th:with="start=${(albas.number/maxPage)*maxPage + 1}, end=(${(albas.totalPages == 0) ? 1 : (start + (maxPage - 1) < albas.totalPages ? start + (maxPage - 1) : albas.totalPages)})">-->
+                            <!--                        <li class="sidePageNum prev" th:if="${albas.pageable.pageNumber > 0}">-->
+                            <!--                            <a th:href="@{/alba/list(page=${((albas.pageable.pageNumber/5)*5) - 1})}" class="page"><svg width="16" height="16" class="sidePageDisabled" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(270deg);" data-v-bd9f2bcc="" data-v-30c80689=""><path fill-rule="evenodd" clip-rule="evenodd" d="M7.64645 4.64645C7.84171 4.45118 8.15829 4.45118 8.35355 4.64645L12.8536 9.14645C13.0488 9.34171 13.0488 9.65829 12.8536 9.85355C12.6583 10.0488 12.3417 10.0488 12.1464 9.85355L8 5.70711L3.85355 9.85355C3.65829 10.0488 3.34171 10.0488 3.14645 9.85355C2.95118 9.65829 2.95118 9.34171 3.14645 9.14645L7.64645 4.64645Z" data-v-bd9f2bcc=""></path></svg></a>-->
+                            <!--                        </li>-->
+                            <!--                        <th:block  th:each="i: ${#numbers.sequence(start, end)}">-->
+                            <!--                            <li>-->
+                            <!--                                <a class="page" th:href="@{/alba/list(page=${i - 1})}" th:classappend="${i == albas.pageable.pageNumber + 1} ? 'selectPage' : '' " th:text="${i}">1</a>-->
+                            <!--                            </li>-->
+                            <!--                        </th:block >-->
+                            <!--                        <li class="sidePageNum next" th:if="${end < albas.totalPages}">-->
+                            <!--                            <a th:href="@{/alba/list(page=${end})}" class="page"><svg width="16" height="16" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(90deg);" data-v-bd9f2bcc="" data-v-30c80689=""><path fill-rule="evenodd" clip-rule="evenodd" d="M7.64645 4.64645C7.84171 4.45118 8.15829 4.45118 8.35355 4.64645L12.8536 9.14645C13.0488 9.34171 13.0488 9.65829 12.8536 9.85355C12.6583 10.0488 12.3417 10.0488 12.1464 9.85355L8 5.70711L3.85355 9.85355C3.65829 10.0488 3.34171 10.0488 3.14645 9.85355C2.95118 9.65829 2.95118 9.34171 3.14645 9.14645L7.64645 4.64645Z" data-v-bd9f2bcc=""></path></svg></a>-->
+                            <!--                        </li>-->
+                            <!--                    </ul>-->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 푸터 -->
+<div th:replace="/footer/footer.html :: footer" class="footer"/>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="/js/header/header.js"></script>
+<script src="/js/myPage/myPage.js"></script>
+<script src="/js/myPage/myPageRest.js"></script>
+<script th:inline="javascript">
+    $("div.menu-a").removeClass('menu-select');
+    $("#inquire").addClass('menu-select');
+
+
+    // const $detail = $("div.commu");
+    // $detail.on(click, viewAnswer);
+
+    function viewAnswer(inquireId) {
+        console.log(inquireId);
+        location.href = "/mypage/inquire/question?inquireId=" + inquireId;
+    }
+
+    $("#c-w").on("click", "div.commu", function(){
+        let inquireId = this.classList[2];
+        viewAnswer(inquireId);
+    })
+    //    -------------------------------------------------
+    globalThis.page = 1;
+    let memberId = [[${member.memberId}]];
+    $(document).ready(function () {
+        myPageService.getIqList({
+            page: globalThis.page
+        }, getList);
+
+    })
+
+    function showNew(){
+        myPageService.getIqList({
+            page: globalThis.page
+        }, getList);
+    }
+
+    function getList(inquires){
+
+        let text = "";
+
+        if(inquires.content.length == 0){
+            text += '<div class="n-c-wrap">';
+            text += '문의 내역이 없습니다.';
+            text += '</div>';
+            $("#n-c").html(text);
+            return;
+        }
+
+        inquires.content.forEach(function (inquireDTO) {
+            console.log(inquires);
+            console.log(inquires.content);
+            text += '<div id="c-w-wrap" class="f-column" >'
+            var number = inquireDTO.inquireId;
+            text += "<div class='commu c-link "+inquireDTO.inquireId+"'>"
+            text += '<div class="c-top-wrap">'
+            let date = new Date(inquireDTO.createdDate);
+            console.log(inquireDTO.inquireStatus);
+            let year = date.getFullYear();
+            let month = date.getMonth()+1;
+            let day = date.getDate();
+            let hour = date.getHours();
+            let min = date.getMinutes();
+            text += '<div class="c-date">'+year+"."+month+"."+day+" "+hour+":"+min+'</div>'
+            text += '</div>'
+            text += '<div class="c-group">'
+            text += '<div class="c-g-title">' + inquireDTO.inquireQTitle +'</div>'
+            text += '</div>'
+            text += '<div class="commu-group">'
+            text += '<div class="c-status">'
+            if(inquireDTO.inquireStatus == 'WAITING'){
+                text += '<span class="i-ing">WAITING</span>'
+            }else{
+                text += '<span class="i-finish">CONFIRM</span>'
+                }
+            text += '</div>'
+            text += '</div>'
+            text += '</div>'
+            text += '</div>'
+        })
+        $("div#c-w").html(text);
+
+        showNewPage(inquires.totalElements);
+    }
+
+    function showNewPage(totalElements){
+        let endNumber = Math.ceil(globalThis.page / 5) * 5;
+        let startNumber = endNumber - 4;
+        let realEnd = Math.ceil(totalElements/ 10);
+
+        if(endNumber > realEnd){
+            endNumber = realEnd == 0 ? '1' : realEnd;
+        }
+
+        let prev = startNumber > 1;
+        let next = endNumber < realEnd ;
+
+        let text = "";
+
+        text += '<ul>'
+        text += '<li className="sidePageNum prev">'
+        if(prev){
+            text += `<a class="payPage" href="` + (startNumber - 1) + `"><svg width="16" height="16" class="sidePageDisabled" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" style="fill: #3c4144; margin-top: 4px; transform:rotate(270deg);" data-v-bd9f2bcc="" data-v-30c80689=""><path fill-rule="evenodd" clip-rule="evenodd" d="M7.64645 4.64645C7.84171 4.45118 8.15829 4.45118 8.35355 4.64645L12.8536 9.14645C13.0488 9.34171 13.0488 9.65829 12.8536 9.85355C12.6583 10.0488 12.3417 10.0488 12.1464 9.85355L8 5.70711L3.85355 9.85355C3.65829 10.0488 3.34171 10.0488 3.14645 9.85355C2.95118 9.65829 2.95118 9.34171 3.14645 9.14645L7.64645 4.64645Z" data-v-bd9f2bcc=""></path></svg></a></li>`
+        }
+        text += '<li>'
+        for (let i=startNumber; i<=endNumber; i++){
+            if(globalThis.page == i){
+                text += `<code class="selectPage">` + i + `</code>`
+                continue;
+            }
+            text += `<a class="payPage" href="`+ i + `"><code>` + i + `</code></a>`
+        }
+        text += '</li>'
+        if(next){
+            text += `<li class="sidePageNum next"><a class="payPage" href="` + (endNumber + 1) + `"><svg width="16" height="16" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(90deg);" data-v-bd9f2bcc="" data-v-30c80689=""><path fill-rule="evenodd" clip-rule="evenodd" d="M7.64645 4.64645C7.84171 4.45118 8.15829 4.45118 8.35355 4.64645L12.8536 9.14645C13.0488 9.34171 13.0488 9.65829 12.8536 9.85355C12.6583 10.0488 12.3417 10.0488 12.1464 9.85355L8 5.70711L3.85355 9.85355C3.65829 10.0488 3.34171 10.0488 3.14645 9.85355C2.95118 9.65829 2.95118 9.34171 3.14645 9.14645L7.64645 4.64645Z" data-v-bd9f2bcc=""></path></svg></a></li>`
+        }
+        text += '</ul>'
+
+        $("#paging").html(text);
+    }
+
+    $("div#paging").on("click", "a.payPage", function(e){
+        console.log("들어옴?");
+        e.preventDefault();
+        globalThis.page = $(this).attr("href");
+        showNew();
+    });
+
+
+    //--------------------------------
+
+</script>
+</html>

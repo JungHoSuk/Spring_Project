@@ -1,0 +1,216 @@
+@charset "utf-8";
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style:none;
+}
+
+#write {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 95px;
+    border: 1px solid #E6E6E6;
+}
+
+#write form table {
+    border-top: 2px solid #565656;
+    border-bottom: 2px solid #565656;
+    width: 100%;
+    font-weight: 300;
+}
+
+#write form table tr th {
+    min-height: 70px;
+    background: #ffffff;
+    vertical-align: middle;
+    padding-left: 20px;
+    border: 1px solid #e6e6e6;
+
+    font-size: 16px;
+    color: #4a4a4a;
+    font-weight: 500;
+}
+
+div.title input {
+    width: 100%;
+    height: 38px;
+    padding-left: 12px;
+    vertical-align: middle;
+    border-radius: 0;
+    border: 1px solid #d9d9d9;
+    outline: none;
+    color: #4e4e4e;
+}
+
+div.categori input{
+    width: 100%;
+    height: 38px;
+    padding-left: 12px;
+    vertical-align: middle;
+    border-radius: 0;
+    border: 1px solid #d9d9d9;
+    outline: none;
+    color: #4e4e4e;
+}
+
+div.noticeNumber input{
+    width: 100%;
+    height: 38px;
+    padding-left: 12px;
+    vertical-align: middle;
+    border-radius: 0;
+    border: 1px solid #d9d9d9;
+    outline: none;
+    color: #4e4e4e;
+}
+
+div.writer input{
+    width: 100%;
+    height: 38px;
+    padding-left: 12px;
+    vertical-align: middle;
+    border-radius: 0;
+    border: 1px solid #d9d9d9;
+    outline: none;
+    color: #4e4e4e;
+}
+
+input.bannerExplain{
+    width: 100%;
+    height: 38px;
+    padding-left: 12px;
+    vertical-align: middle;
+    border-radius: 0;
+    border: 1px solid #d9d9d9;
+    outline: none;
+    color: #4e4e4e;
+}
+
+div#editor { margin-top: 5px; }
+
+div#ask_editor input{
+    width: 100%;
+    height: 150px;
+    resize: none;
+}
+
+div#editor #letter-count{
+    position: relative;
+    top: -9px;
+    padding-right: 10px;
+
+    text-align: right;
+    color: #868686;
+    font-weight: 500;
+}
+
+td div.file {
+    width: 150px;
+    height: 40px;
+    background: #403f3f url('https://www.returnfarm.com:444/css/wvtex/img/uploadBtn.png') no-repeat;
+    border: none;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: pointer;
+}
+
+td div.file input {
+    display: block !important;
+    width: 120px !important;
+    height: 30px !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+}
+
+td #preview-image{
+    margin-top: 15px!important;
+}
+
+#img-wrap {
+    display: flex!important;
+    flex-wrap: wrap;
+    margin-left: 15px;
+    min-height: 100px;
+}
+
+#img-wrap>li {
+    display: flex!important;
+    flex-direction: column;
+    position: relative;
+    margin: 10px 15px 10px 0;
+}
+
+#img-wrap img {height: 70px;}
+
+.file-name {
+    width: 75px;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div.btns-group {
+    float: right;
+    margin: 10px 0px 30px;
+}
+
+div.btns-group .g-btn {
+    width: 110px;
+    height: 33px;
+    border-radius: 0;
+    border: 1px solid rgb(184, 184, 184);
+    box-shadow: 0.1px 0.1px 8px -5px #000000;
+
+    font-size: 15px;
+    color: #4d4d4d;
+}
+
+div.btns-group .list { margin-right: 5px; }
+div.btns-group .list:hover { background: #e7e7e7; }
+
+div.btns-group .submit {
+    background: #47c880;
+    color: white;
+    letter-spacing: 2px;
+}
+
+textarea.summernote{
+    width: 100%;
+    height: 150px;
+    resize: none;
+}
+
+textarea.summernote_ask{
+    width: 100%;
+    resize: none;
+    border: white;
+    margin-top: 5px;
+}
+
+table.ask_all_reply{
+    margin-top: 140px;
+}
+
+div.cancelBtn{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 22px;
+    height: 22px;
+    padding: 5px;
+    background: rgb(225, 228, 231);
+    border-radius: 50%;
+    font-size: 22px;
+    text-align: center;
+    line-height: 9px;
+    color: #fff;
+    cursor: pointer;
+}

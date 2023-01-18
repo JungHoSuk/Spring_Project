@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>너와농부싶어</title>
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <link rel="stylesheet" href="/css/common/font.css" />
+    <link rel="stylesheet" href="/css/header/header.css" />
+    <link rel="stylesheet" href="/css/footer/footer.css" />
+    <link rel="stylesheet" href="/css/myPage/sideMenu.css" />
+    <link rel="stylesheet" href="/css/myPage/applyList.css" />
+</head>
+<body>
+<div th:replace="/header/header.html :: header" class="header"/>
+<div id="main">
+    <div class="wrap-w" style="padding-bottom: 0">
+        <div class="container">
+            <div class="contentsWrap">
+                <!--메뉴 카텍고리 시작-->
+                <div th:replace="/myPage/sidemenu.html :: myPageMenu"></div>
+                <!--컨텐츠 시작-->
+                <div class="contents">
+                    <div class="c-header">
+                        <div class="c-title" th:object="${memberProgram}">
+                            <div><img src="/image/myPage/backBtn.png" onclick="history.back();" class="back">아르바이트 신청자 목록</div>
+                        </div>
+                        <div class="content">
+                            <!-- 신청자가 없을 때 -->
+                            <div id="content-wrap" th:if="${memberAlba}">
+                                <div class="n-c-wrap" style="line-height: 25px;">
+                                    신청자가 아직 없습니다.
+                                </div>
+                            </div>
+                            <!------------------->
+
+                            <!-- 신청자가 있을 때 -->
+                            <div id="c-w-wrap">
+                                <div id="ls-wrap" class="f-column apply-Lists-wrap">
+                                    <!---->
+                                    <th:block th:each="memberAlba:${memberAlbas}">
+                                    <div class="apply-wrap">
+                                        <div class="apply-list">
+                                            <div class="a-group">
+                                                <div class="a-name" th:text="${memberAlba.memberName}">박수현</div>
+                                                <div class="a-phone a-txt" th:text="${memberAlba.memberEmail}">java123@gmail.com</div>
+                                            </div>
+
+                                            <div class="a-group">
+                                                <!-- 아르바이트 신청날짜 -->
+                                                <!--<div class="a-date a-txt">2022.11.24</div>-->
+                                                <th:block th:if="${#strings.equals(memberAlba.memberStatus, 'WAITING')}">
+                                                    <div class="a-btn-group" >
+                                                            <button class="a-accept" th:id="albaApplyId" th:data-albaApplyId="${memberAlba.albaApplyId}">수락</button>
+                                                            <button class="a-refuse" th:id="albaApplyId" th:data-albaApplyId="${memberAlba.albaApplyId}">거절</button>
+                                                            <input type="hidden" name="memberAlbaApplyId" th:value="${memberAlba.albaApplyId}">
+                                                    </div>
+                                                    <div style="display: none; color:#47c880;">수락</div>
+                                                    <div style="display: none; color:rgb(118, 125, 130);">거절</div>
+                                                </th:block>
+                                                <th:block th:unless="${#strings.equals(memberAlba.memberStatus, 'WAITING')}">
+                                                    <div class="a-btn-group-b">
+                                                        <th:block th:if="${#strings.equals(memberAlba.memberStatus, 'CONFIRM')}">
+                                                            <div class="status-ok" style="color:#47c880;">수락</div>
+                                                        </th:block>
+                                                        <th:block th:if="${#strings.equals(memberAlba.memberStatus, 'REJECT')}">
+                                                            <div class="status-no" style="color:rgb(118, 125, 130);">거절</div>
+                                                        </th:block>
+                                                    </div>
+                                                </th:block >
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <input type="hidden" name="albaId" th:value="${memberAlba.albaId}">
+                                    </th:block>
+
+                                </div>
+                            </div>
+                            <!------------------->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 푸터 -->
+<div th:replace="/footer/footer.html :: footer" class="footer"/>
+
+<!-- 알람 모달창 -->
+<div class="overlay-l o-auto" style="display: none">
+    <div class="m-al">신청 인원이 다 찼습니다.</div>
+</div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="/js/header/header.js"></script>
+<script src="/js/myPage/myPage.js"></script>
+<script src="/js/myPage/list.js"></script>
+<script th:inline="javascript">
+    $(".apply-list").on("click", function(){
+        let $info = $(this).next();
+        let $moreBtn = $(this).find('svg');
+        // console.log($moreBtn);
+
+        if ($info.css("height") == "0px") {
+            $(".a-more>svg").css("transform", "rotate(180deg)")
+            $(".apply-info").css("height", "0");
+            $(".apply-info").css("padding", "0");
+
+            $moreBtn.css("transform", "rotate(0)")
+            $info.css("height", "151px");
+            $info.css("padding", "12px 3px");
+        } else {
+            $moreBtn.css("transform", "rotate(180deg)")
+            $info.css("height", "0");
+            $info.css("padding", "0");
+        }
+    });
+
+    $("div.menu-a").removeClass('menu-select');
+    $("#alba").addClass('menu-select');
+
+//-------------------------------------------
+
+    let albaId = $("input[name=albaId]").val();
+    console.log(albaId);
+
+    $("button.a-accept").on("click", function(){
+        //console.log(this.getAttribute('data-albaApplyId'));
+        const albaApplyId = this.getAttribute('data-albaApplyId');
+        confirm(albaApplyId, albaId, this);
+    });
+
+    function confirm (albaApplyId, albaId, btn){ /* 수락 */
+
+        $.ajax({
+            url: "/mypage/alba/confirm",
+            type : "post",
+            data : {albaApplyId: albaApplyId,
+                albaId: albaId},
+            success : function () {
+                console.log(btn);
+                $(btn).parent("div.a-btn-group").css("display", "none");
+                $(btn).parent().next().css("display", "block");
+                //$(btn).parent().parent().siblings().children().children().children("div.status-ok").html("수락");
+            }
+        });
+    }
+
+
+    $("button.a-refuse").on("click", function(){
+        //console.log(this.getAttribute('data-albaApplyId'));
+        const albaApplyId = this.getAttribute('data-albaApplyId');
+        reject(albaApplyId, this);
+    });
+
+    function reject (albaApplyId, btn){ /* 거절 */
+
+        $.ajax({
+            url: "/mypage/alba/reject",
+            type : "post",
+            data : {albaApplyId: albaApplyId},
+            success : function () {
+                $(btn).parent("div.a-btn-group").css("display", "none");
+                $(btn).parent().next().next().css("display", "block");
+            }
+        });
+    }
+
+
+</script>
+</html>

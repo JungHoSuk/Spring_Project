@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <link rel="stylesheet" href="/css/common/font.css" />
+    <link rel="stylesheet" href="/css/header/header.css" />
+    <link rel="stylesheet" href="/css/login/login.css" />
+</head>
+<body>
+    <div th:replace="/header/header.html :: header" class="header"/>
+    <div id="in-wrap">
+        <div class="title">로그인</div>
+        <div>
+            <div class="oauth-group">
+                <section class="kakao">
+                    <div class="oauth-logo">
+                        <img src="https://cdn.comento.kr/icon/icon-kakao-medium.svg">
+                    </div>
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=b6c8cc415d06296f3dad49e498e431cc&redirect_uri=http://localhost:5555/login/kakao&response_type=code" class="oauth-txt" style="color: #181600;">카카오로 1초만에 시작하기</a>
+                </section>
+                <section class="naver" id="naver_id_login">
+                    <div class="oauth-logo">
+                        <img src="https://cdn.comento.kr/icon/icon-naver-medium.svg">
+                    </div>
+                    <div class="oauth-txt" onclick="location.href='https://nid.naver.com/oauth2.0/authorize?&client_id=u3ZqJSTCTJ24JmTyzz72&response_type=code&redirect_uri=http://localhost:5555/login/naver&response_type=code'">네이버로 시작하기</div>
+                </section>
+                <section class="google">
+                    <div class="oauth-logo">
+                        <img src="https://cdn.comento.kr/icon/icon-google-medium.svg">
+                    </div>
+                    <div class="oauth-txt" onclick="location.href='https://accounts.google.com/o/oauth2/v2/auth?client_id=467034188557-a2dk8gl9s7rtj2nvh0f0t5ls35gnfsi3.apps.googleusercontent.com&redirect_uri=http://localhost:5555/login/google&response_type=code&scope=email%20profile%20openid&access_type=offline'">구글로 시작하기</div>
+                </section>
+            </div>
+            <div style="text-align: center">
+                <p class="l-j-bottom">
+                    <a  th:href="@{/login/agreement}" class="l-j-l"><u>이용약관</u></a> 및 <a th:href="@{/login/agreement}" class="l-j-l"><u>개인정보 처리방침</u></a> 확인 후 동의합니다
+                </p>
+                <a th:href="@{/register/}" class="l-j-l move-page"><u>회원이 아니신가요?</u></a>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script>
+
+    // 헤더 검색창 없애기
+    $(".search_form").css("visibility", "hidden");
+
+</script>
+</script>
+</html>

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/common/font.css"> <!-- 폰트 -->
+    <link rel="stylesheet" href="/css/admin/sideMenuList.css"> <!-- 사이드 메뉴 & 해더 -->
+    <link rel="stylesheet" href="/css/admin/contents.css"> <!-- 컨텐츠 공통 스타일 -->
+    <link rel="stylesheet" href="/css/admin/page.css"> <!-- 페이징 -->
+    <link rel="stylesheet" href="/css/admin/policy.css"> <!-- 검색 폼 & 테이블 공통 스타일 -->
+    <link rel="stylesheet" href="/css/admin/notice.css"> <!-- 테이블 개별 스타일 -->
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <!-- 사이드 메뉴 -->
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="/js/admin/side_menu.js"></script>
+    <!-- 버튼 클릭 시 확인 알림창 -->
+    <script src="/js/admin/check.js"></script>
+    <title>관리자-배너 관리</title>
+</head>
+
+<body>
+
+<div id="wrapper">
+    <!-- 세로 메뉴바 -->
+    <nav th:replace="/fix/side_menu.html :: sideMenu"></nav>
+    <!-- 헤더 ~ 밑에 메인 컨텐츠 -->
+    <div id="container">
+        <!-- 헤더 -->
+        <header>
+            <span id="admin-header-title" class="short">배너 관리</span>
+            <span id="admin-mode">관리자 모드</span>
+            <span id="userCount">가입된 회원 수 총 <strong th:text="${memberCounts}"></strong>명</span>
+        </header>
+        <div id="wrapContents">
+            <!-- 컨텐츠 검색 부분 -->
+            <div class="p-contents chart-no">
+
+                <!-- 검색어 입력 폼 -->
+                <form th:action="@{/admin/banner}" name="searchForm">
+                    <div class="search-form">
+                            <span class="s-form">
+                                <select class="keywords" th:value="${param.keyword}" name="keyword">
+                                    <option value="t">베너명</option>
+                                    <option value="c">배너텍스트</option>
+                                </select>
+                            </span>
+                        <span class="s-f-input">
+                                <span class="search-input">
+                                    <input type="text" th:value="${param.searchText}" name="searchText" placeholder="검색어를 입력하세요.">
+                                </span>
+                            </span>
+                        <button type="submit" class="searchBtn">
+                            <img src="/image/admin/search.png">
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- 프로그램 리스트 출력 틀 -->
+            <div class="p-contents contents-bottom">
+                    <span class="list-count">총
+                        <span th:text="${bannerCounts}"></span>건
+                    </span>
+
+                <table>
+                    <tr class="title">
+                        <th class="num">배너번호</th>
+                        <th class="title">배너명</th>
+                        <th class="content">배너텍스트</th>
+                        <th class="nickName">작성자</th>
+                        <th class="status">상태</th>
+                        <th class="registrationDate">등록일</th>
+                        <th class="revise"></th>
+                        <th class="delete"></th>
+                    </tr>
+                    <!-- ↓ 데이터 출력 -->
+                    <th:block th:each="banner:${banners}">
+                        <tr th:object="${banner}">
+                            <td class="num" th:text="*{bannerId}"></td>
+                            <td class="title" th:text="*{bannerTitle}"></td>
+                            <td class="content" th:utext="*{bannerInfo}"></td>
+                            <td class="nickName">관리자</td>
+                            <td class="status" th:text="*{bannerStatus}"></td>
+                            <td class="registrationDate" th:text="*{#temporals.format(createdDate, 'yyyy.MM.dd HH:mm')}"></td>
+                            <td class="revise"><input type="button" value="수정" th:onclick="|javascript:goUpdate(*{bannerId})|"></td>
+                            <td class="delete">
+                                <form method="post" class="deleteForm" th:action="@{/admin/banner/delete}">
+                                    <input type="hidden" name="bannerId" th:value="*{bannerId}">
+                                    <input type="hidden" name="page" th:value="${criteria.page}">
+                                    <input type="hidden" name="searchText" th:value="${criteria.searchText}">
+                                    <input type="hidden" name="keyword" th:value="${criteria.keyword}">
+                                    <input type="button" value="삭제" class="deleteBtn">
+                                </form>
+                            </td>
+                        </tr>
+                    </th:block>
+                    <tr th:if="${data}">
+                        <td colspan="8" style="height: 180px;">검색 결과가 없습니다.</td>
+                    </tr>
+                </table>
+                <div id="write" style="float: right;">
+                    <input type="button" onclick="javascript:goPage()" value="배너 등록">
+                </div>
+
+                <!-- 페이징 -->
+                <div id="page" th:if="${!data}">
+                    <div class="page_nation">
+                        <th:block th:with="start=${(banners.number/maxPage)*maxPage + 1}, end=(${(banners.totalPages == 0) ? 1 : (start + (maxPage - 1) < banners.totalPages ? start + (maxPage - 1) : banners.totalPages)})">
+                            <th:block th:if="${banners.pageable.pageNumber > 0}">
+                                <a class="arrow pprev" th:href="@{/admin/banner(page=0, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                                <a class="arrow prev" th:href="@{/admin/banner(page=${((banners.pageable.pageNumber/10)*10) - 1}, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                            </th:block >
+
+                            <th:block th:each="i: ${#numbers.sequence(start, end)}">
+                                <a th:href="@{/admin/banner(page=${i - 1}, searchText=${param.searchText}, keyword=${param.keyword})}" th:classappend="${i == banners.pageable.pageNumber + 1} ? 'active' : '' " th:text="${i}">1</a>
+                            </th:block >
+
+                            <th:block th:if="${end < banners.totalPages}">
+                                <a class="arrow next" th:href="@{/admin/banner(page=${end},searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                                <a class="arrow nnext" th:href="@{/admin/banner(page=${banners.totalPages - 1}, searchText=${param.searchText}, keyword=${param.keyword})}"></a>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script th:inline="javascript">
+    let content = "";
+    let queryString = [[${criteria.queryString}]];
+    const urlParams = new URL(location.href).searchParams;
+    const keyword = urlParams.get('keyword');
+
+    // 등록 페이지 이동
+    function goPage() {
+        location.href='/admin/banner/register' + queryString;
+    }
+    // 수정 페이지 이동
+    function goUpdate(bannerId) {
+        location.href='/admin/banner/update' + queryString + '&bannerId=' + bannerId;
+    }
+
+    $("td.content").each(function (i, e) {
+        content = $(this).html().replace(/<br>/ig, "&nbsp;");
+        content = content.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+        $(this).html(content);
+    });
+
+    // 검색 옵션
+    if(keyword == null || keyword == "") {
+        $(".keywords").val('t').prop("selected", true);
+    } else {
+        $(".keywords").val(keyword).prop("selected", true);
+    }
+
+    $(document).ready(function(){
+        $(".status").each(function(i, item) {
+            if($(this).html() == "USING"){
+                $(this).html("사용 중");
+                $(this).css("color", "green");
+            } else {
+                $(this).html("사용 안함");
+            }
+        })
+    });
+
+    // 삭제 확인 알람
+    var msg = "이 배너를 삭제 하시겠습니까?";
+
+    $(".deleteBtn").on("click", function () {
+        var flag = confirm(msg);
+
+        if(flag){
+            $(this).parent("form.deleteForm").submit();
+        }
+    });
+</script>
+</body>
+<html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/header/header.css"/>
+    <link rel="stylesheet" href="/css/footer/footer.css"/>
+    <link rel="stylesheet" href="/css/common/font.css"/>
+    <link rel="stylesheet" href="/css/mento/chatting.css"/>
+    <link rel="icon" href="/image/header/favicon.png" />
+    <link rel="shortcut icon" href="/image/header/favicon.png" />
+    <title>멘토 채팅 페이지</title>
+</head>
+<body>
+<!--헤더 삽입-->
+<div th:replace="/header/header.html :: header" class="header"/>
+<!--채팅 알림 부분인데 이후 헤더로 이동 후에 세션으로 알림값 고정으로 받기-->
+<span id="alarmCheck" style="display: none" th:text="${alarmCnt}"></span>
+<span id="sessionId" style="display: none" th:text="${sessionId}"></span>
+<!--바디-->
+<section id="section_main" style="height: 760px;">
+    <div id="section_wrap">
+        <div id="section_contents">
+
+            <!-- -------------------------------- -->
+                        <!--왼쪽 채팅 영역-->
+            <!-- -------------------------------- -->
+            <div id="content_left">
+                <div>
+                    <ul id="content_left_list";>
+                        <th:block th:each="room:${rooms}">
+                            <li class="left_lists" th:object="${room}">
+                                <a href="javascript:void(0);" class="left_lists_a">
+                                    <div>
+                                        <span class="red-circle" style="display: none"></span>
+                                        <!--로그인 세션에 따라 멘토인지, 멘티인지 구분하고 대화 상대의 닉네임 출력하는 부분 수정해야 함-->
+                                        <div class="list_name">
+                                            <p class="list_name_p1" th:if="${sessionId} == *{mentee.memberId}" th:text="*{mentor.memberNickname}"></p>
+                                            <p class="list_name_p1" th:unless="${sessionId} == *{mentee.memberId}" th:text="*{mentee.memberNickname}"></p>
+                                            <p class="list_name_p2"></p></div>
+                                        <div>
+                                            <p class="list_text_p1"></p><p class="list_text_p2">채팅방을 클릭하면 대화기록이 보여집니다</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!--채팅방 번호 저장하기용...-->
+                                <span th:text="*{chatRoomId}" id="chatId" style="visibility: hidden"></span>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- -------------------------------- -->
+                    <!--여기가 오른쪽 채팅 영역-->
+            <!-- -------------------------------- -->
+            <div id="content_right">
+                <!--채팅 상대방의 정보-->
+                <div class="content_right_name">
+                    <div class="right_profile">
+                        <!--<p class="right_thumb">
+                            <img src="https://api.2awesomementor.com/files/user/2022/10/1668795064008.jpg" alt="" class="thumb_image">
+                        </p>-->
+                        <div class="right_text">
+                            <p class="list_text_p1">대화 상대를 선택해주세요.</p>
+                            <p class="list_text_p2">*욕설 및 비방, 비하의 채팅을 하지말아주세요!</p>
+                        </div>
+                        <div style="margin-top: 10px; float: right">
+                            <input type="button" id="apply_button" value="너와 농부싶어" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <!--채팅 내역-->
+                <div class="content_right_chatting" id="chat-foreach">
+                    <th:block th:each="chat:${chats}">
+                        <!--여기는 채팅방 내역이 들어갈 자리!-->
+                    </th:block>
+                </div>
+
+                <!--채팅 작성 부분-->
+                <div class="chatting_write">
+                    <div class="chatting_write_border">
+                        <input type="text" placeholder="메세지를 입력하세요." class="chatting_write_input" id="message">
+                        <a href="javascript:void(0)" class="chatting_send" id="send">
+                            <img src="https://www.2awesomementor.com/img/ico-24-send.99437830.svg" alt="" class="thumb_image">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--멘토 신청 모달-->
+<div id="modal" style="display: none">
+    <div class="modal-overlay">
+        <div class="c-modal">
+            <div class="m-wrap">
+                <div class="m-title">멘토 신청하기</div>
+                <form action="">
+                    <div class="m-c-wrap">
+                        <div class="m-c-title">멘토님께 인사말 한마디 부탁드려요</div>
+                        <input type="text" placeholder="간단한 인사말 작성해주세요" class="modal_input">
+                    </div>
+                    <div class="applyBtnWrap">
+                        <button type="button" class="applyBtn">멘토 신청</button>
+                        <button type="button" class="cancel">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--멘토 신청 완료 모달-->
+<div id="modalSuccess" style="display: none;">
+    <div class="modalSuccess-overlay">
+        <div class="c-modal">
+            <div class="m-wrap">
+                <div class="m-title">멘토 신청 완료되었습니다!</div>
+                <form action="">
+                    <div class="m-c-wrap">
+                        <div class="m-c-title">1:1 채팅하기 버튼으로 멘토와 채팅해주세요.</div>
+                    </div>
+                    <div class="applyBtnWrap">
+                        <button type="button" class="listBtn" id="completeBtn">완료</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--멘토 끊기 모달창-->
+<div id="quitmodal" style="display: none">
+    <div class="modal-overlay">
+        <div class="c-modal">
+            <div class="m-wrap">
+                <div class="m-title">멘토 끊기</div>
+                <form action="">
+                    <div class="m-c-wrap">
+                        <div class="m-c-title">정말 멘토관계를 끊으실건가요?</div>
+                    </div>
+                    <div class="quitBtnWrap">
+                        <button type="button" class="quitBtn">멘토 끊기</button>
+                        <button type="button" class="quitCancel">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--푸터 삽입-->
+<div th:replace="/footer/footer.html :: footer" class="footer"/>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="/js/header/header.js"></script>
+<script src="/js/mento/chatting.js"></script>
+<script src="/js/chat/chatting.js"></script>
+<script>
+    $(".left_lists_a").on("click", function () {
+        $("#apply_button").val("채팅중");
+    })
+
+</script>
+</html>
